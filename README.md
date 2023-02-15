@@ -32,8 +32,10 @@ coltheartN("book", subtlex_uk$Spelling, show=T)
 # based on the Levenshtein distance
 old20("book", subtlex_uk$Spelling, show=T)
 
-# calculate OLD20 for list of words
-# function uses multiple cores to improve performance when calculating
-# OLD20 for a large number of words
+# calculate OLD20 for a list of words
 calculate_old20(c("room", "tree"), subtlex_uk$Spelling)
+
+# calculate_old20 function utilises multiple cores to improve performance
+# when calculating old20 for large number of words, e.g.
+old20 <- calculate_old20(subtlex_uk$Spelling, subtlex_uk$Spelling)
 ```
