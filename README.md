@@ -16,7 +16,7 @@ library(strngrams)
 ```R
 library(readxl)
 
-# download SUBTLEX-UK database (van Heuven et al., 2014) with a list of English words
+# download SUBTLEX-UK database (van Heuven et al., 2014) that contains a large list of English words
 download.file(url='https://psychology.nottingham.ac.uk/subtlex-uk/SUBTLEX-UK.xlsx.zip',
               destfile='SUBTLEX-UK.xlsx.zip',
               method='curl')
