@@ -8,7 +8,7 @@ for psycholinguistic research (e.g. neighbourhood density, OLD20).
 ```R
 library(devtools)
 devtools::install_github("waltervanheuven/strsim")
-library(strngrams)
+library(strsim)
 ```
 
 ## Usage
