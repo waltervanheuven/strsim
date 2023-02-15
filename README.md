@@ -1,7 +1,7 @@
 # strsim
 
 [R](https://www.r-project.org) package with string similarity functions relevant
-for psycholinguistic research.
+for psycholinguistic research (e.g. neighbourhood density, OLD20).
 
 ## Installation
 
@@ -33,5 +33,7 @@ coltheartN("book", subtlex_uk$Spelling, show=T)
 old20("book", subtlex_uk$Spelling, show=T)
 
 # calculate OLD20 for list of words
+# function uses multiple cores to improve performance when calculating
+# OLD20 for a large number of words
 calculate_old20(c("room", "tree"), subtlex_uk$Spelling)
 ```
