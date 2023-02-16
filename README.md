@@ -28,7 +28,7 @@ subtlex_uk <- read_xlsx("SUBTLEX-UK.xlsx")
 # Orthographic neighbours of the word book
 coltheartN("book", subtlex_uk$Spelling, show=T)
 
-# OLD20 value and the 20 orthographic closest words of the word book
+# OLD20 value and the 20 orthographically closest words of the word book
 # based on the Levenshtein distance
 old20("book", subtlex_uk$Spelling, show=T)
 
