@@ -29,7 +29,7 @@ is_neighbour <- function(w1, w2) {
 #'
 #' @param target_str target character string
 #' @param all_words list of words
-#' @param showN show neighours
+#' @param show show neighours
 #'
 #' @return number of neighbours
 #'
@@ -77,8 +77,8 @@ calculate_coltheartN <- function(targets, all_words) {
 #' @param target_word target word
 #' @param words list of words
 #' @param old_n number of words to calculate old20, default is 20
-#' @param showN show the Levenshtein distance of each of the 20 words that have
-#' the lowest Levenshtein distance.
+#' @param show show the Levenshtein distance of each of the 20 words that have
+#' the lowest Levenshtein distance with the target word.
 #'
 #' @return mean Levenshtein distance
 #'
@@ -117,7 +117,7 @@ old20 <- function(target_word, words, old_n = 20, show = FALSE) {
 #' Function calculates OLD20 of a list of words using (max_cores - 1) cores.
 #'
 #'
-#' @param target_word list of target words
+#' @param target_words list of target words
 #' @param all_words list of words
 #' @param old_n max number of most similar words to calculate OLD20
 #'

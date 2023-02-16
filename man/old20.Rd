@@ -2,23 +2,29 @@
 % Please edit documentation in R/strsim.R
 \name{old20}
 \alias{old20}
-\title{Function that calculate the OLD20 of a single string}
+\title{Function that calculate the OLD20 of a single string.}
 \usage{
-old20(target_word, words, old_n = 20, showN = FALSE)
+old20(target_word, words, old_n = 20, show = FALSE)
 }
 \arguments{
-\item{target_word}{target string}
+\item{target_word}{target word}
 
 \item{words}{list of words}
 
 \item{old_n}{number of words to calculate old20, default is 20}
 
-\item{showN}{show the orthographic similar words}
+\item{show}{show the Levenshtein distance of each of the 20 words that have
+the lowest Levenshtein distance with the target word.}
 }
 \value{
-mean levenshtein distance
+mean Levenshtein distance
 }
 \description{
-OLD20 defintion can be found in Yarkoni et al. (2008), see
-http://link.springer.com/article/10.3758/PBR.15.5.971
+OLD20 defintion was proposed by Yarkoni et al. (2008), see
+\href{http://link.springer.com/article/10.3758/PBR.15.5.971}{http://link.springer.com/article/10.3758/PBR.15.5.971}
+}
+\examples{
+\dontrun{
+old20("book", subtlex_uk$Spelling)
+}
 }

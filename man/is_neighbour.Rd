@@ -15,17 +15,17 @@ is_neighbour(w1, w2)
 boolean
 }
 \description{
-Function to check that two strings are orthographic neighbours
+Function that checks whether two words are orthographic neighbours.
 }
 \examples{
-\dontrun{
+{
 # Orthographic Neighbour
 is_neighbour("book", "look")
 # Not a neighbour
 is_neighbour("book", "boll")
 # Not a neighbour
 is_neighbour("book", "boo")
-# Not a neighbour
+# Orthographic Neighbour
 is_neighbour("book", "boök")
 }
 

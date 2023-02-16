@@ -2,8 +2,8 @@
 % Please edit documentation in R/strsim.R
 \name{calculate_coltheartN}
 \alias{calculate_coltheartN}
-\title{Function uses multiple cores to calculate the orthographic neighbours of
-a list of words}
+\title{Function calculates the orthographic neighbours of
+a list of words using (max_cores - 1) cores.}
 \usage{
 calculate_coltheartN(targets, all_words)
 }
@@ -16,6 +16,6 @@ calculate_coltheartN(targets, all_words)
 list of the number of neighbours
 }
 \description{
-Function uses multiple cores to calculate the orthographic neighbours of
-a list of words
+Function calculates the orthographic neighbours of
+a list of words using (max_cores - 1) cores.
 }

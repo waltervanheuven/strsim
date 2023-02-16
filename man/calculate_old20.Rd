@@ -2,20 +2,25 @@
 % Please edit documentation in R/strsim.R
 \name{calculate_old20}
 \alias{calculate_old20}
-\title{Function calculates OLD20 of a list of strings using multiple cores}
+\title{Function calculates OLD20 of a list of words using (max_cores - 1) cores.}
 \usage{
 calculate_old20(target_words, all_words, old_n = 20)
 }
 \arguments{
-\item{all_words}{list of all words}
+\item{target_words}{list of target words}
+
+\item{all_words}{list of words}
 
 \item{old_n}{max number of most similar words to calculate OLD20}
-
-\item{target_word}{target string}
 }
 \value{
-list of words with OLD20 values
+OLD20 for each of the target strings
 }
 \description{
-Function calculates OLD20 of a list of strings using multiple cores
+Function calculates OLD20 of a list of words using (max_cores - 1) cores.
+}
+\examples{
+\dontrun{
+calculate_old20(c("table", "tree"), subtlex_uk$Spelling)
+}
 }

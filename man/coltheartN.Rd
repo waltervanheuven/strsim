@@ -4,14 +4,14 @@
 \alias{coltheartN}
 \title{Function calculates the number of orthographic neighbours of a single string}
 \usage{
-coltheartN(target_str, all_words, showN = FALSE)
+coltheartN(target_str, all_words, show = FALSE)
 }
 \arguments{
 \item{target_str}{target character string}
 
 \item{all_words}{list of words}
 
-\item{showN}{show neighours}
+\item{show}{show neighours}
 }
 \value{
 number of neighbours
