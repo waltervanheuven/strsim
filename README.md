@@ -8,12 +8,12 @@ for psycholinguistic research (e.g. neighbourhood density, OLD20).
 ```R
 library(devtools)
 devtools::install_github("waltervanheuven/strsim")
-library(strsim)
 ```
 
 ## Usage
 
 ```R
+library(strsim)
 library(readxl)
 
 # download SUBTLEX-UK database (van Heuven et al., 2014) that contains a large list of English words
