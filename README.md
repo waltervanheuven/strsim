@@ -1,7 +1,7 @@
 # strsim
 
 [R](https://www.r-project.org) package with string similarity functions relevant
-for psycholinguistic research (e.g. neighbourhood density, OLD20).
+for psycholinguistic research (e.g. neighborhood density, neighborhood frequency, OLD20).
 
 ## Installation
 
@@ -25,8 +25,11 @@ unzip("SUBTLEX-UK.xlsx.zip")
 # load xlsx
 subtlex_uk <- read_xlsx("SUBTLEX-UK.xlsx")
 
-# Orthographic neighbours of the word book
-coltheartN("book", subtlex_uk$Spelling, show=T)
+# Orthographic neighbors of the word book
+neighborhood_density("book", subtlex_uk$Spelling, show=T)
+
+# Neighborhood frequency
+neighborhood_frequency("book", subtlex_uk$Spelling, subtlex_uk$Spelling, subtlex_uk$`LogFreq(Zipf)`, show=T)
 
 # OLD20 value and the 20 orthographically closest words of the word book
 # based on the Levenshtein distance
