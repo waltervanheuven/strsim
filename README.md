@@ -28,6 +28,9 @@ subtlex_uk <- read_xlsx("SUBTLEX-UK.xlsx")
 # Orthographic neighbors of the word book
 neighborhood_density("book", subtlex_uk$Spelling, show=T)
 
+# Orthographic neighbors of all words
+neighborhood_density(subtlex_uk$Spelling, subtlex_uk$Spelling)
+
 # Neighborhood frequency
 neighborhood_frequency("book", subtlex_uk$Spelling, subtlex_uk$`LogFreq(Zipf)`, show=T)
 
