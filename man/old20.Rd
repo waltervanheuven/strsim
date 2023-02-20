@@ -2,7 +2,8 @@
 % Please edit documentation in R/strsim.R
 \name{old20}
 \alias{old20}
-\title{Function that calculate the OLD20 of a single string.}
+\title{Function that calculate the OLD20 of a single string. OLD20 is based on the
+Levenshtein distance.}
 \usage{
 old20(target_word, words, old_n = 20, show = FALSE)
 }
@@ -20,7 +21,7 @@ the lowest Levenshtein distance with the target word.}
 mean Levenshtein distance
 }
 \description{
-OLD20 defintion was proposed by Yarkoni et al. (2008), see
+OLD20 definition was proposed by Yarkoni et al. (2008), see
 \href{http://link.springer.com/article/10.3758/PBR.15.5.971}{http://link.springer.com/article/10.3758/PBR.15.5.971}
 }
 \examples{

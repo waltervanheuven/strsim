@@ -22,5 +22,6 @@ Function calculates OLD20 of a list of words using (max_cores - 1) cores.
 \examples{
 \dontrun{
 calculate_old20(c("table", "tree"), subtlex_uk$Spelling)
+calculate_old20(subtlex_uk$Spelling, subtlex_uk$Spelling)
 }
 }

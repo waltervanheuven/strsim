@@ -25,53 +25,134 @@ is_neighbour <- function(w1, w2) {
   return (stringdist::stringdist(w1, w2, method="hamming", nthread = 1) == 1)
 }
 
-#' Function calculates the number of orthographic neighbours of a single string
+#' Function calculates neighbourhood density of a single string. It is based
+#' on the definition of a neighbour by Coltheart et al. (1977).
 #'
 #' @param target_str target character string
-#' @param all_words list of words
+#' @param dt data table with words
 #' @param show show neighours
 #'
 #' @return number of neighbours
 #'
 #' @examples
 #' \dontrun{
-#' coltheartN("book", subtlex_uk$Spelling)
+#' nd_string("book", data.table(word = all_words))
 #' }
 #' @export
-coltheartN <- function(target_str, all_words, show=FALSE) {
-  df <- data.frame(
-    words = all_words,
-    nletters = nchar(all_words)
-  )
-  df.subset <- subset(df, df$nletters == nchar(target_str))
-  neighbours_detected <- lapply(df.subset$words, FUN=is_neighbour, w2=target_str)
-
-  neighbours <- df.subset$words[ which(unlist(neighbours_detected)) ]
+#' @import data.table
+nd_string <- function(target_str, dt, show=FALSE) {
+  # to prevent 'No visible binding for global variable' error, asign NULL to word
+  # see https://www.r-bloggers.com/2019/08/no-visible-binding-for-global-variable/
+  word <- NULL
+  # find neighbours
+  neighbours_detected <- dt[ is_neighbour(target_str, word) ]
+  # show them
   if (show==TRUE) {
-    print(neighbours)
+    print(neighbours_detected)
   }
-
-  return(length(neighbours))
+  # return the number of neighbours
+  return(nrow(neighbours_detected))
 }
 
-#' Function calculates the orthographic neighbours of
-#' a list of words using (max_cores - 1) cores.
+#' Function calculates the neighbourhood density of
+#' a list of words.
 #'
-#' @param targets target strings
+#' @param targets_spellings target strings
 #' @param all_words all words
+#' @param show show neighbours
 #'
 #' @return list of the number of neighbours
 #'
+#' @examples
+#' \dontrun{
+#' neighborhood_density("book", subtlex_uk$Spelling)
+#' neighborhood_density(subtlex_uk$Spelling, subtlex_uk$Spelling)
+#' }
 #' @export
-calculate_coltheartN <- function(targets, all_words) {
+neighborhood_density <- function(targets_spellings, all_words, show=FALSE) {
+  # create DT
+  dt <- data.table::data.table(
+    word = all_words
+  )
+  # utilize all cores except 1
   cl <- parallel::detectCores() - 1
-  neighbours <- pbapply::pblapply(targets, FUN=coltheartN, all_words=all_words, cl=cl)
-  return(unlist(neighbours))
+  # run function in parallel
+  nd <- pbapply::pblapply(targets_spellings, FUN=nd_string, dt=dt, cl=cl, show=show)
+  # return
+  return(unlist(nd))
 }
 
-#' Function that calculate the OLD20 of a single string.
+#' Function calculates the neighbourhood frequency of a single string. Frequency
+#' of that target string is looked up in the data table.
 #'
-#' OLD20 defintion was proposed by Yarkoni et al. (2008), see
+#' @param target target string
+#' @param dt_corpus data table with words and frequencies (word, frequency)
+#' @param show show higher frequency neighours
+#'
+#' @return number of higher frequency neighbours
+#'
+#' @examples
+#' \dontrun{
+#' library(data.table)
+#' dt <- data.table( word = subtlex_uk$Spelling, frequency = subtlex_uk$`LogFreq(Zipf)`)
+#' nf_string("book", dt, show=T)
+#' }
+#' @export
+nf_string <- function(target, dt_corpus, show=FALSE) {
+  # asign NULL to column variables in data table
+  word <- frequency <- NULL
+  # find target frequency in dt_corpus
+  if (target %in% dt_corpus$word) {
+    target_frequency <- dt_corpus[word == target]$frequency
+  } else {
+    # not in corpus, assume frequency of zero
+    target_frequency <- 0
+  }
+  # find higher frequency neighbours
+  neighbours_detected <- dt_corpus[  is_neighbour(target, word) &
+                                       frequency > target_frequency ]
+
+  if (show==TRUE) {
+    print(neighbours_detected)
+  }
+
+  return(nrow(neighbours_detected))
+}
+
+#' Function calculates the neighbourhood frequency
+#' of a list of words based on the words and frequencies provided.
+#'
+#' @param targets_spellings target strings
+#' @param all_words all words
+#' @param all_frequencies frequencies of all words
+#' @param show show neighbours
+#'
+#' @return list of the number of higher frequency neighbours
+#'
+#' @examples
+#' \dontrun{
+#' neighborhood_frequency("book", subtlex_uk$Spelling, subtlex_uk$`LogFreq(Zipf)`, show=T)
+#' }
+#'
+#' @export
+neighborhood_frequency <- function(targets_spellings, all_words, all_frequencies, show=FALSE) {
+  # create DT
+  dt_corpus <- data.table::data.table(
+    word = all_words,
+    frequency = all_frequencies
+  )
+  # utilize all cores except 1
+  cl <- parallel::detectCores() - 1
+  # run function in parallel
+  nf <- pbapply::pblapply(targets_spellings, FUN=nf_string, dt=dt_corpus, cl=cl, show=show)
+  # return number of higher frequency neighbours
+  return(unlist(nf))
+}
+
+#' Function that calculate the OLD20 of a single string. OLD20 is based on the
+#' Levenshtein distance.
+#'
+#' OLD20 definition was proposed by Yarkoni et al. (2008), see
 #' \href{http://link.springer.com/article/10.3758/PBR.15.5.971}{http://link.springer.com/article/10.3758/PBR.15.5.971}
 #'
 #' @param target_word target word
@@ -88,30 +169,31 @@ calculate_coltheartN <- function(targets, all_words) {
 #' }
 #' @export
 old20 <- function(target_word, words, old_n = 20, show = FALSE) {
-  df <- data.frame(
+  lv <- NULL
+  dt <- data.table::data.table(
     Spelling = words,
     # Levenshtein distance
     lv = stringdist::stringdist(target_word, words, method = "lv", nthread = 1)
   )
 
   # sort by distance
-  df <- df[ order(df$lv), ]
+  dt <- dt[ order(lv), ]
 
   # take first 20, skip first one if that one is the target (lv=0)
-  if (utils::head(df, 1)$lv == 0) {
-    df.old20 <- df[2:(old_n+1),]
+  if (utils::head(dt, 1)$lv == 0) {
+    dt.old20 <- dt[2:(old_n+1),]
   } else {
-    df.old20 <- df[1:old_n,]
+    dt.old20 <- dt[1:old_n,]
   }
 
   if (show == TRUE) {
     # show the 20 words with the lowest Levenshtein distance
-    print(df.old20)
+    print(dt.old20)
   }
 
   # return the mean Levenshtein distance of the 20 words
   # with the lowest Levenshtein distance
-  return(mean(df.old20$lv))
+  return(mean(dt.old20$lv))
 }
 
 #' Function calculates OLD20 of a list of words using (max_cores - 1) cores.
@@ -126,6 +208,7 @@ old20 <- function(target_word, words, old_n = 20, show = FALSE) {
 #' @examples
 #' \dontrun{
 #' calculate_old20(c("table", "tree"), subtlex_uk$Spelling)
+#' calculate_old20(subtlex_uk$Spelling, subtlex_uk$Spelling)
 #' }
 #' @export
 calculate_old20 <- function(target_words, all_words, old_n = 20) {
