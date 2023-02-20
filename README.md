@@ -29,7 +29,7 @@ subtlex_uk <- read_xlsx("SUBTLEX-UK.xlsx")
 neighborhood_density("book", subtlex_uk$Spelling, show=T)
 
 # Neighborhood frequency
-neighborhood_frequency("book", subtlex_uk$Spelling, subtlex_uk$Spelling, subtlex_uk$`LogFreq(Zipf)`, show=T)
+neighborhood_frequency("book", subtlex_uk$Spelling, subtlex_uk$`LogFreq(Zipf)`, show=T)
 
 # OLD20 value and the 20 orthographically closest words of the word book
 # based on the Levenshtein distance
