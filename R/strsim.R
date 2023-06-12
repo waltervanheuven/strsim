@@ -60,6 +60,8 @@ nd_string <- function(target_str, dt, show=FALSE) {
 #' @param targets_spellings target strings
 #' @param all_words all words
 #' @param show show neighbours
+#' @param pb show progress bar
+#' @param parallel parallel processing
 #'
 #' @return list of the number of neighbours
 #'
@@ -69,15 +71,29 @@ nd_string <- function(target_str, dt, show=FALSE) {
 #' neighborhood_density(subtlex_uk$Spelling, subtlex_uk$Spelling)
 #' }
 #' @export
-neighborhood_density <- function(targets_spellings, all_words, show=FALSE) {
+neighborhood_density <- function(targets_spellings, all_words, show=FALSE, pb = FALSE, parallel = FALSE) {
   # create DT
   dt <- data.table::data.table(
     word = all_words
   )
-  # utilize all cores except 1
-  cl <- parallel::detectCores() - 1
-  # run function in parallel
-  nd <- pbapply::pblapply(targets_spellings, FUN=nd_string, dt=dt, cl=cl, show=show)
+  if (isTRUE(parallel)) {
+    # utilize all cores except 1
+    cl <- parallel::detectCores() - 1
+
+    if (isTRUE(pb)) {
+      # run function in parallel
+      nd <- pbapply::pblapply(targets_spellings, FUN=nd_string, dt=dt, cl=cl, show=show)
+    } else {
+      nd <- parallel::mclapply(targets_spellings, FUN=nd_string, dt=dt, cl=cl, show=show)
+    }
+  } else {
+    if (isTRUE(pb)) {
+      # run function in parallel
+      nd <- pbapply::pblapply(targets_spellings, FUN=nd_string, dt=dt, cl=NULL, show=show)
+    } else {
+      nd <- lapply(targets_spellings, FUN=nd_string, dt=dt, show=show)
+    }
+  }
   # return
   return(unlist(nd))
 }
@@ -126,6 +142,8 @@ nf_string <- function(target, dt_corpus, show=FALSE) {
 #' @param all_words all words
 #' @param all_frequencies frequencies of all words
 #' @param show show neighbours
+#' @param pb show progress bar
+#' @param parallel parallel processing
 #'
 #' @return list of the number of higher frequency neighbours
 #'
@@ -135,16 +153,31 @@ nf_string <- function(target, dt_corpus, show=FALSE) {
 #' }
 #'
 #' @export
-neighborhood_frequency <- function(targets_spellings, all_words, all_frequencies, show=FALSE) {
+neighborhood_frequency <- function(targets_spellings, all_words, all_frequencies, show=FALSE, pb = FALSE, parallel = FALSE) {
   # create DT
   dt_corpus <- data.table::data.table(
     word = all_words,
     frequency = all_frequencies
   )
-  # utilize all cores except 1
-  cl <- parallel::detectCores() - 1
-  # run function in parallel
-  nf <- pbapply::pblapply(targets_spellings, FUN=nf_string, dt=dt_corpus, cl=cl, show=show)
+  if (isTRUE(parallel)) {
+    # utilize all cores except 1
+    cl <- parallel::detectCores() - 1
+
+    if (isTRUE(pb)) {
+      # run function in parallel
+      nf <- pbapply::pblapply(targets_spellings, FUN=nf_string, dt=dt_corpus, cl=cl, show=show)
+    } else {
+      nf <- parallel::mclapply(targets_spellings, FUN=nf_string, dt=dt_corpus, cl=cl, show=show)
+    }
+  } else {
+    if (isTRUE(pb)) {
+      # run function in parallel
+      nf <- pbapply::pblapply(targets_spellings, FUN=nf_string, dt=dt_corpus, cl=NULL, show=show)
+    } else {
+      nf <- lapply(targets_spellings, FUN=nf_string, dt=dt_corpus, show=show)
+    }
+  }
+
   # return number of higher frequency neighbours
   return(unlist(nf))
 }
@@ -179,16 +212,16 @@ old20 <- function(target_word, words, old_n = 20, show = FALSE) {
   # sort by distance
   dt <- dt[ order(lv), ]
 
-  # take first 20, skip first one if that one is the target (lv=0)
-  if (utils::head(dt, 1)$lv == 0) {
-    dt.old20 <- dt[2:(old_n+1),]
-  } else {
-    dt.old20 <- dt[1:old_n,]
-  }
+  # remove first one if that one is the target
+  dt <- dt[!(dt$lv == 0), ]
+  # take first 20 (old_n)
+  dt.old20 <- dt[1:old_n, ]
 
   if (show == TRUE) {
     # show the 20 words with the lowest Levenshtein distance
     print(dt.old20)
+    # show sum and mean
+    cat("sum: ", sum(dt.old20$lv), "\nmean:", mean(dt.old20$lv), "\n")
   }
 
   # return the mean Levenshtein distance of the 20 words
@@ -202,6 +235,8 @@ old20 <- function(target_word, words, old_n = 20, show = FALSE) {
 #' @param target_words list of target words
 #' @param all_words list of words
 #' @param old_n max number of most similar words to calculate OLD20
+#' @param pb show progress bar
+#' @param parallel parallel processing
 #'
 #' @return OLD20 for each of the target strings
 #'
@@ -211,8 +246,23 @@ old20 <- function(target_word, words, old_n = 20, show = FALSE) {
 #' calculate_old20(subtlex_uk$Spelling, subtlex_uk$Spelling)
 #' }
 #' @export
-calculate_old20 <- function(target_words, all_words, old_n = 20) {
-  cl=parallel::detectCores() - 1
-  old20_list <- pbapply::pblapply(target_words, FUN=old20, words=all_words, old_n=old_n, cl=cl)
+calculate_old20 <- function(target_words, all_words, old_n = 20, pb = FALSE, parallel = FALSE) {
+  if (isTRUE(parallel)) {
+
+    cl <- parallel::detectCores() - 1
+
+    if (isTRUE(pb)) {
+      old20_list <- pbapply::pblapply(target_words, FUN=old20, words=all_words, old_n=old_n, cl=cl)
+    } else {
+      old20_list <- parallel::mclapply(target_words, FUN=old20, words=all_words, old_n=old_n, cl=cl)
+    }
+  } else {
+    if (isTRUE(pb)) {
+      old20_list <- pbapply::pblapply(target_words, FUN=old20, words=all_words, old_n=old_n, cl=NULL)
+    } else {
+      old20_list <- lapply(target_words, FUN=old20, words=all_words, old_n=old_n)
+    }
+  }
+
   return(unlist(old20_list))
 }

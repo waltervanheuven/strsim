@@ -4,7 +4,13 @@
 \alias{calculate_old20}
 \title{Function calculates OLD20 of a list of words using (max_cores - 1) cores.}
 \usage{
-calculate_old20(target_words, all_words, old_n = 20)
+calculate_old20(
+  target_words,
+  all_words,
+  old_n = 20,
+  pb = FALSE,
+  parallel = FALSE
+)
 }
 \arguments{
 \item{target_words}{list of target words}
@@ -12,6 +18,10 @@ calculate_old20(target_words, all_words, old_n = 20)
 \item{all_words}{list of words}
 
 \item{old_n}{max number of most similar words to calculate OLD20}
+
+\item{pb}{show progress bar}
+
+\item{parallel}{parallel processing}
 }
 \value{
 OLD20 for each of the target strings

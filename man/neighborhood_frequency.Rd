@@ -9,7 +9,9 @@ neighborhood_frequency(
   targets_spellings,
   all_words,
   all_frequencies,
-  show = FALSE
+  show = FALSE,
+  pb = FALSE,
+  parallel = FALSE
 )
 }
 \arguments{
@@ -20,6 +22,10 @@ neighborhood_frequency(
 \item{all_frequencies}{frequencies of all words}
 
 \item{show}{show neighbours}
+
+\item{pb}{show progress bar}
+
+\item{parallel}{parallel processing}
 }
 \value{
 list of the number of higher frequency neighbours

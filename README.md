@@ -29,7 +29,8 @@ subtlex_uk <- read_xlsx("SUBTLEX-UK.xlsx")
 neighborhood_density("book", subtlex_uk$Spelling, show=T)
 
 # Orthographic neighbors of all words
-neighborhood_density(subtlex_uk$Spelling, subtlex_uk$Spelling)
+# progress bar is shown and multiple cores are used to speed up calculation
+nd <- neighborhood_density(subtlex_uk$Spelling, subtlex_uk$Spelling, pb=TRUE, parallel=TRUE)
 
 # Neighborhood frequency
 neighborhood_frequency("book", subtlex_uk$Spelling, subtlex_uk$`LogFreq(Zipf)`, show=T)
@@ -39,9 +40,9 @@ neighborhood_frequency("book", subtlex_uk$Spelling, subtlex_uk$`LogFreq(Zipf)`, 
 old20("book", subtlex_uk$Spelling, show=T)
 
 # calculate OLD20 for a list of words
-calculate_old20(c("room", "tree"), subtlex_uk$Spelling)
+calculate_old20(c("room", "apricot", "dictionary"), subtlex_uk$Spelling)
 
 # calculate_old20 function utilises multiple cores to improve performance
 # when calculating old20 for large number of words, e.g.
-old20 <- calculate_old20(subtlex_uk$Spelling, subtlex_uk$Spelling)
+old20 <- calculate_old20(subtlex_uk$Spelling, subtlex_uk$Spelling, pb=TRUE, parallel=TRUE)
 ```

@@ -1,3 +1,9 @@
+## strsim 1.2.0
+
+- Corrected old20 function. Target was not removed from data.table
+- Progress bar is now optional.
+- Parallel execution is now optional.
+
 ## strsim 1.1.0
 
 - Added neighborhood density and neighbourhood frequency functions. Neighborhood density

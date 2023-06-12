@@ -5,7 +5,13 @@
 \title{Function calculates the neighbourhood density of
 a list of words.}
 \usage{
-neighborhood_density(targets_spellings, all_words, show = FALSE)
+neighborhood_density(
+  targets_spellings,
+  all_words,
+  show = FALSE,
+  pb = FALSE,
+  parallel = FALSE
+)
 }
 \arguments{
 \item{targets_spellings}{target strings}
@@ -13,6 +19,10 @@ neighborhood_density(targets_spellings, all_words, show = FALSE)
 \item{all_words}{all words}
 
 \item{show}{show neighbours}
+
+\item{pb}{show progress bar}
+
+\item{parallel}{parallel processing}
 }
 \value{
 list of the number of neighbours

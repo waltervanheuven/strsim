@@ -1,7 +1,7 @@
 Package: strsim
 Type: Package
 Title: String similarity functions
-Version: 1.1.0
+Version: 1.2.0
 Author: Walter van Heuven
 Maintainer: The package maintainer <walter.vanheuven@nottingham.ac.uk>
 Description: String similarity functions useful for psycholinguistics
@@ -11,8 +11,7 @@ Encoding: UTF-8
 LazyData: true
 Imports:
    data.table, 
-   stringdist, 
-   utils,
+   stringdist,
    pbapply,
    parallel
 RoxygenNote: 7.2.3
