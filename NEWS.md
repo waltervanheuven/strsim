@@ -1,3 +1,7 @@
+## strsim 1.2.1
+
+- Fixed mclapply function call.
+
 ## strsim 1.2.0
 
 - Corrected old20 function. Target was not removed from data.table

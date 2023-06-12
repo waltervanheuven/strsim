@@ -47,7 +47,7 @@ nd_string <- function(target_str, dt, show=FALSE) {
   # find neighbours
   neighbours_detected <- dt[ is_neighbour(target_str, word) ]
   # show them
-  if (show==TRUE) {
+  if (isTRUE(show)) {
     print(neighbours_detected)
   }
   # return the number of neighbours
@@ -84,7 +84,7 @@ neighborhood_density <- function(targets_spellings, all_words, show=FALSE, pb = 
       # run function in parallel
       nd <- pbapply::pblapply(targets_spellings, FUN=nd_string, dt=dt, cl=cl, show=show)
     } else {
-      nd <- parallel::mclapply(targets_spellings, FUN=nd_string, dt=dt, cl=cl, show=show)
+      nd <- parallel::mclapply(targets_spellings, FUN=nd_string, dt=dt, mc.cores=cl, show=show)
     }
   } else {
     if (isTRUE(pb)) {
@@ -128,7 +128,7 @@ nf_string <- function(target, dt_corpus, show=FALSE) {
   neighbours_detected <- dt_corpus[  is_neighbour(target, word) &
                                        frequency > target_frequency ]
 
-  if (show==TRUE) {
+  if (isTRUE(show)) {
     print(neighbours_detected)
   }
 
@@ -167,7 +167,7 @@ neighborhood_frequency <- function(targets_spellings, all_words, all_frequencies
       # run function in parallel
       nf <- pbapply::pblapply(targets_spellings, FUN=nf_string, dt=dt_corpus, cl=cl, show=show)
     } else {
-      nf <- parallel::mclapply(targets_spellings, FUN=nf_string, dt=dt_corpus, cl=cl, show=show)
+      nf <- parallel::mclapply(targets_spellings, FUN=nf_string, dt=dt_corpus, mc.cores=cl, show=show)
     }
   } else {
     if (isTRUE(pb)) {
@@ -217,7 +217,7 @@ old20 <- function(target_word, words, old_n = 20, show = FALSE) {
   # take first 20 (old_n)
   dt.old20 <- dt[1:old_n, ]
 
-  if (show == TRUE) {
+  if (isTRUE(show)) {
     # show the 20 words with the lowest Levenshtein distance
     print(dt.old20)
     # show sum and mean
@@ -229,8 +229,10 @@ old20 <- function(target_word, words, old_n = 20, show = FALSE) {
   return(mean(dt.old20$lv))
 }
 
-#' Function calculates OLD20 of a list of words using (max_cores - 1) cores.
+#' Function calculates OLD20 of a list of words.
 #'
+#' OLD20 definition was proposed by Yarkoni et al. (2008), see
+#' \href{http://link.springer.com/article/10.3758/PBR.15.5.971}{http://link.springer.com/article/10.3758/PBR.15.5.971}
 #'
 #' @param target_words list of target words
 #' @param all_words list of words
@@ -254,7 +256,7 @@ calculate_old20 <- function(target_words, all_words, old_n = 20, pb = FALSE, par
     if (isTRUE(pb)) {
       old20_list <- pbapply::pblapply(target_words, FUN=old20, words=all_words, old_n=old_n, cl=cl)
     } else {
-      old20_list <- parallel::mclapply(target_words, FUN=old20, words=all_words, old_n=old_n, cl=cl)
+      old20_list <- parallel::mclapply(target_words, FUN=old20, words=all_words, old_n=old_n, mc.cores=cl)
     }
   } else {
     if (isTRUE(pb)) {

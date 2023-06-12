@@ -2,7 +2,7 @@
 % Please edit documentation in R/strsim.R
 \name{calculate_old20}
 \alias{calculate_old20}
-\title{Function calculates OLD20 of a list of words using (max_cores - 1) cores.}
+\title{Function calculates OLD20 of a list of words.}
 \usage{
 calculate_old20(
   target_words,
@@ -27,7 +27,8 @@ calculate_old20(
 OLD20 for each of the target strings
 }
 \description{
-Function calculates OLD20 of a list of words using (max_cores - 1) cores.
+OLD20 definition was proposed by Yarkoni et al. (2008), see
+\href{http://link.springer.com/article/10.3758/PBR.15.5.971}{http://link.springer.com/article/10.3758/PBR.15.5.971}
 }
 \examples{
 \dontrun{
