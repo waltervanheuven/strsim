@@ -2,7 +2,7 @@
 % Please edit documentation in R/strsim.R
 \name{is_neighbour}
 \alias{is_neighbour}
-\title{strsim}
+\title{Are two strings neighbours?}
 \usage{
 is_neighbour(w1, w2)
 }
@@ -15,7 +15,8 @@ is_neighbour(w1, w2)
 boolean
 }
 \description{
-Function that checks whether two words are orthographic neighbours.
+`is_neighbour()` checks whether two strings are orthographic neighbours
+according to Coltheart et al.'s (1977) definition of a neighbour (Coltheart's N).
 }
 \examples{
 {

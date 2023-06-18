@@ -2,8 +2,7 @@
 % Please edit documentation in R/strsim.R
 \name{neighborhood_density}
 \alias{neighborhood_density}
-\title{Function calculates the neighbourhood density of
-a list of words.}
+\title{Neighbourhood Density of a list of words}
 \usage{
 neighborhood_density(
   targets_spellings,
@@ -28,12 +27,11 @@ neighborhood_density(
 list of the number of neighbours
 }
 \description{
-Function calculates the neighbourhood density of
-a list of words.
+neighborhood_density()` calculates the neighbourhood density of a list of words.
 }
 \examples{
 \dontrun{
-neighborhood_density("book", subtlex_uk$Spelling)
-neighborhood_density(subtlex_uk$Spelling, subtlex_uk$Spelling)
+nd("book", subtlex_uk$Spelling)
+nd(subtlex_uk$Spelling, subtlex_uk$Spelling)
 }
 }

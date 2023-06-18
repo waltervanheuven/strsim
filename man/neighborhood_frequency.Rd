@@ -2,8 +2,7 @@
 % Please edit documentation in R/strsim.R
 \name{neighborhood_frequency}
 \alias{neighborhood_frequency}
-\title{Function calculates the neighbourhood frequency
-of a list of words based on the words and frequencies provided.}
+\title{Neighbourhood Frequency of a list of words}
 \usage{
 neighborhood_frequency(
   targets_spellings,
@@ -31,7 +30,7 @@ neighborhood_frequency(
 list of the number of higher frequency neighbours
 }
 \description{
-Function calculates the neighbourhood frequency
+`neighborhood_frequency()` calculates the neighbourhood frequency
 of a list of words based on the words and frequencies provided.
 }
 \examples{

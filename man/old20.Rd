@@ -2,30 +2,32 @@
 % Please edit documentation in R/strsim.R
 \name{old20}
 \alias{old20}
-\title{Function that calculate the OLD20 of a single string. OLD20 is based on the
-Levenshtein distance.}
+\title{OLD20 of a list of words}
 \usage{
-old20(target_word, words, old_n = 20, show = FALSE)
+old20(target_words, all_words, old_n = 20, pb = FALSE, parallel = FALSE)
 }
 \arguments{
-\item{target_word}{target word}
+\item{target_words}{list of target words}
 
-\item{words}{list of words}
+\item{all_words}{list of words}
 
-\item{old_n}{number of words to calculate old20, default is 20}
+\item{old_n}{max number of most similar words to calculate OLD20}
 
-\item{show}{show the Levenshtein distance of each of the 20 words that have
-the lowest Levenshtein distance with the target word.}
+\item{pb}{show progress bar}
+
+\item{parallel}{parallel processing}
 }
 \value{
-mean Levenshtein distance
+OLD20 for each of the target strings
 }
 \description{
-OLD20 definition was proposed by Yarkoni et al. (2008), see
-\href{http://link.springer.com/article/10.3758/PBR.15.5.971}{http://link.springer.com/article/10.3758/PBR.15.5.971}
+`old20()` calculates the OLD20 of a list of words.
+The OLD20 definition was proposed by
+\href{http://link.springer.com/article/10.3758/PBR.15.5.971}{Yarkoni et al. (2008)}.
 }
 \examples{
 \dontrun{
-old20("book", subtlex_uk$Spelling)
+old20(c("table", "tree"), subtlex_uk$Spelling)
+old20(subtlex_uk$Spelling, subtlex_uk$Spelling, pb = TRUE, parallel = TRUE)
 }
 }

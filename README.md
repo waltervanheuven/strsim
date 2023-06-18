@@ -36,12 +36,12 @@ neighborhood_frequency("book", subtlex_uk$Spelling, subtlex_uk$`LogFreq(Zipf)`, 
 
 # OLD20 value and the 20 orthographically closest words of the word book
 # based on the Levenshtein distance
-old20("book", subtlex_uk$Spelling, show=TRUE)
+old("book", subtlex_uk$Spelling, show=TRUE)
 
 # calculate OLD20 for a list of words
-calculate_old20(c("room", "apricot", "dictionary"), subtlex_uk$Spelling)
+old20(c("room", "apricot", "dictionary"), subtlex_uk$Spelling)
 
 # calculate_old20 function utilises multiple cores to improve performance
 # when calculating old20 for large number of words, e.g.
-old20 <- calculate_old20(subtlex_uk$Spelling, subtlex_uk$Spelling, pb=TRUE, parallel=TRUE)
+old20 <- old20(subtlex_uk$Spelling, subtlex_uk$Spelling, pb=TRUE, parallel=TRUE)
 ```

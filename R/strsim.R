@@ -1,7 +1,7 @@
-#' strsim
+#' Are two strings neighbours?
 #'
-
-#' Function that checks whether two words are orthographic neighbours.
+#' `is_neighbour()` checks whether two strings are orthographic neighbours
+#' according to Coltheart et al.'s (1977) definition of a neighbour (Coltheart's N).
 #'
 #' @param w1 character string
 #' @param w2 character string
@@ -25,8 +25,10 @@ is_neighbour <- function(w1, w2) {
   return (stringdist::stringdist(w1, w2, method="hamming", nthread = 1) == 1)
 }
 
-#' Function calculates neighbourhood density of a single string. It is based
-#' on the definition of a neighbour by Coltheart et al. (1977).
+#' Neighbourhood Density
+#'
+#' `nd()` calculates the neighbourhood density of a string. It is based
+#' on the definition of an orthographic neighbour by Coltheart et al. (1977).
 #'
 #' @param target_str target character string
 #' @param dt data table with words
@@ -36,26 +38,28 @@ is_neighbour <- function(w1, w2) {
 #'
 #' @examples
 #' \dontrun{
-#' nd_string("book", data.table(word = all_words))
+#' nd("book", data.table(word = all_words))
 #' }
-#' @export
 #' @import data.table
-nd_string <- function(target_str, dt, show=FALSE) {
-  # to prevent 'No visible binding for global variable' error, asign NULL to word
-  # see https://www.r-bloggers.com/2019/08/no-visible-binding-for-global-variable/
+#' @export
+nd <- function(target_str, dt, show=FALSE) {
+  # to prevent 'No visible binding for global variable' error,
+  # asign NULL to word, see
+  # https://www.r-bloggers.com/2019/08/no-visible-binding-for-global-variable/
   word <- NULL
   # find neighbours
   neighbours_detected <- dt[ is_neighbour(target_str, word) ]
   # show them
-  if (isTRUE(show)) {
+  if (isTRUE(show) & nrow(neighbours_detected) > 0) {
     print(neighbours_detected)
   }
   # return the number of neighbours
   return(nrow(neighbours_detected))
 }
 
-#' Function calculates the neighbourhood density of
-#' a list of words.
+#' Neighbourhood Density of a list of words
+#'
+#' neighborhood_density()` calculates the neighbourhood density of a list of words.
 #'
 #' @param targets_spellings target strings
 #' @param all_words all words
@@ -67,11 +71,12 @@ nd_string <- function(target_str, dt, show=FALSE) {
 #'
 #' @examples
 #' \dontrun{
-#' neighborhood_density("book", subtlex_uk$Spelling)
-#' neighborhood_density(subtlex_uk$Spelling, subtlex_uk$Spelling)
+#' nd("book", subtlex_uk$Spelling)
+#' nd(subtlex_uk$Spelling, subtlex_uk$Spelling)
 #' }
 #' @export
-neighborhood_density <- function(targets_spellings, all_words, show=FALSE, pb = FALSE, parallel = FALSE) {
+neighborhood_density <- function(targets_spellings, all_words, show=FALSE,
+                                 pb = FALSE, parallel = FALSE) {
   # create DT
   dt <- data.table::data.table(
     word = all_words
@@ -82,24 +87,29 @@ neighborhood_density <- function(targets_spellings, all_words, show=FALSE, pb = 
 
     if (isTRUE(pb)) {
       # run function in parallel
-      nd <- pbapply::pblapply(targets_spellings, FUN=nd_string, dt=dt, cl=cl, show=show)
+      nd <- pbapply::pblapply(targets_spellings, FUN=nd, dt=dt,
+                              cl=cl, show=show)
     } else {
-      nd <- parallel::mclapply(targets_spellings, FUN=nd_string, dt=dt, mc.cores=cl, show=show)
+      nd <- parallel::mclapply(targets_spellings, FUN=nd, dt=dt,
+                               mc.cores=cl, show=show)
     }
   } else {
     if (isTRUE(pb)) {
       # run function in parallel
-      nd <- pbapply::pblapply(targets_spellings, FUN=nd_string, dt=dt, cl=NULL, show=show)
+      nd <- pbapply::pblapply(targets_spellings, FUN=nd, dt=dt,
+                              cl=NULL, show=show)
     } else {
-      nd <- lapply(targets_spellings, FUN=nd_string, dt=dt, show=show)
+      nd <- lapply(targets_spellings, FUN=nd, dt=dt, show=show)
     }
   }
   # return
   return(unlist(nd))
 }
 
-#' Function calculates the neighbourhood frequency of a single string. Frequency
-#' of that target string is looked up in the data table.
+#' Neighbourhood Frequency
+#'
+#' `nf()` calculates the neighbourhood frequency of a single string. Frequency
+#' of the target string is looked up in the data table `dt_corpus`.
 #'
 #' @param target target string
 #' @param dt_corpus data table with words and frequencies (word, frequency)
@@ -111,10 +121,10 @@ neighborhood_density <- function(targets_spellings, all_words, show=FALSE, pb = 
 #' \dontrun{
 #' library(data.table)
 #' dt <- data.table( word = subtlex_uk$Spelling, frequency = subtlex_uk$`LogFreq(Zipf)`)
-#' nf_string("book", dt, show=T)
+#' nf("book", dt, show=T)
 #' }
 #' @export
-nf_string <- function(target, dt_corpus, show=FALSE) {
+nf <- function(target, dt_corpus, show=FALSE) {
   # asign NULL to column variables in data table
   word <- frequency <- NULL
   # find target frequency in dt_corpus
@@ -128,14 +138,16 @@ nf_string <- function(target, dt_corpus, show=FALSE) {
   neighbours_detected <- dt_corpus[  is_neighbour(target, word) &
                                        frequency > target_frequency ]
 
-  if (isTRUE(show)) {
+  if (isTRUE(show) & nrow(neighbours_detected) > 0) {
     print(neighbours_detected)
   }
 
   return(nrow(neighbours_detected))
 }
 
-#' Function calculates the neighbourhood frequency
+#' Neighbourhood Frequency of a list of words
+#'
+#' `neighborhood_frequency()` calculates the neighbourhood frequency
 #' of a list of words based on the words and frequencies provided.
 #'
 #' @param targets_spellings target strings
@@ -153,7 +165,8 @@ nf_string <- function(target, dt_corpus, show=FALSE) {
 #' }
 #'
 #' @export
-neighborhood_frequency <- function(targets_spellings, all_words, all_frequencies, show=FALSE, pb = FALSE, parallel = FALSE) {
+neighborhood_frequency <- function(targets_spellings, all_words,
+                                   all_frequencies, show=FALSE, pb = FALSE, parallel = FALSE) {
   # create DT
   dt_corpus <- data.table::data.table(
     word = all_words,
@@ -165,16 +178,19 @@ neighborhood_frequency <- function(targets_spellings, all_words, all_frequencies
 
     if (isTRUE(pb)) {
       # run function in parallel
-      nf <- pbapply::pblapply(targets_spellings, FUN=nf_string, dt=dt_corpus, cl=cl, show=show)
+      nf <- pbapply::pblapply(targets_spellings, FUN=nf, dt=dt_corpus,
+                              cl=cl, show=show)
     } else {
-      nf <- parallel::mclapply(targets_spellings, FUN=nf_string, dt=dt_corpus, mc.cores=cl, show=show)
+      nf <- parallel::mclapply(targets_spellings, FUN=nf, dt=dt_corpus,
+                               mc.cores=cl, show=show)
     }
   } else {
     if (isTRUE(pb)) {
       # run function in parallel
-      nf <- pbapply::pblapply(targets_spellings, FUN=nf_string, dt=dt_corpus, cl=NULL, show=show)
+      nf <- pbapply::pblapply(targets_spellings, FUN=nf, dt=dt_corpus,
+                              cl=NULL, show=show)
     } else {
-      nf <- lapply(targets_spellings, FUN=nf_string, dt=dt_corpus, show=show)
+      nf <- lapply(targets_spellings, FUN=nf, dt=dt_corpus, show=show)
     }
   }
 
@@ -182,27 +198,29 @@ neighborhood_frequency <- function(targets_spellings, all_words, all_frequencies
   return(unlist(nf))
 }
 
-#' Function that calculate the OLD20 of a single string. OLD20 is based on the
-#' Levenshtein distance.
+#' Orthographic Levenshtein Distance
 #'
-#' OLD20 definition was proposed by Yarkoni et al. (2008), see
-#' \href{http://link.springer.com/article/10.3758/PBR.15.5.971}{http://link.springer.com/article/10.3758/PBR.15.5.971}
+#' `old()` calculates the average Orthographic Levenshtein Distance (OLD)
+#' of a single string. When n_old is 20 (default value), the function
+#' calculates OLD20 as defined by
+#' \href{http://link.springer.com/article/10.3758/PBR.15.5.971}{Yarkoni et al. (2008)}.
 #'
 #' @param target_word target word
 #' @param words list of words
 #' @param old_n number of words to calculate old20, default is 20
-#' @param show show the Levenshtein distance of each of the 20 words that have
+#' @param show show the Levenshtein distance of each of the n_old (20) words that have
 #' the lowest Levenshtein distance with the target word.
 #'
-#' @return mean Levenshtein distance
+#' @return average Levenshtein distance
 #'
 #' @examples
 #' \dontrun{
-#' old20("book", subtlex_uk$Spelling)
+#' old("book", subtlex_uk$Spelling)
 #' }
 #' @export
-old20 <- function(target_word, words, old_n = 20, show = FALSE) {
+old <- function(target_word, words, old_n = 20, show = FALSE) {
   lv <- NULL
+
   dt <- data.table::data.table(
     Spelling = words,
     # Levenshtein distance
@@ -214,6 +232,11 @@ old20 <- function(target_word, words, old_n = 20, show = FALSE) {
 
   # remove first one if that one is the target
   dt <- dt[!(dt$lv == 0), ]
+
+  if(nrow(dt) < old_n) {
+    stop("Not enough words to calculate OLD 'length(dt)' < 'old_n'")
+  }
+
   # take first 20 (old_n)
   dt.old20 <- dt[1:old_n, ]
 
@@ -229,10 +252,11 @@ old20 <- function(target_word, words, old_n = 20, show = FALSE) {
   return(mean(dt.old20$lv))
 }
 
-#' Function calculates OLD20 of a list of words.
+#' OLD20 of a list of words
 #'
-#' OLD20 definition was proposed by Yarkoni et al. (2008), see
-#' \href{http://link.springer.com/article/10.3758/PBR.15.5.971}{http://link.springer.com/article/10.3758/PBR.15.5.971}
+#' `old20()` calculates the OLD20 of a list of words.
+#' The OLD20 definition was proposed by
+#' \href{http://link.springer.com/article/10.3758/PBR.15.5.971}{Yarkoni et al. (2008)}.
 #'
 #' @param target_words list of target words
 #' @param all_words list of words
@@ -244,25 +268,30 @@ old20 <- function(target_word, words, old_n = 20, show = FALSE) {
 #'
 #' @examples
 #' \dontrun{
-#' calculate_old20(c("table", "tree"), subtlex_uk$Spelling)
-#' calculate_old20(subtlex_uk$Spelling, subtlex_uk$Spelling)
+#' old20(c("table", "tree"), subtlex_uk$Spelling)
+#' old20(subtlex_uk$Spelling, subtlex_uk$Spelling, pb = TRUE, parallel = TRUE)
 #' }
 #' @export
-calculate_old20 <- function(target_words, all_words, old_n = 20, pb = FALSE, parallel = FALSE) {
+old20 <- function(target_words, all_words, old_n = 20,
+                            pb = FALSE, parallel = FALSE) {
   if (isTRUE(parallel)) {
 
     cl <- parallel::detectCores() - 1
 
     if (isTRUE(pb)) {
-      old20_list <- pbapply::pblapply(target_words, FUN=old20, words=all_words, old_n=old_n, cl=cl)
+      old20_list <- pbapply::pblapply(target_words, FUN=old, words=all_words,
+                                      old_n=old_n, cl=cl)
     } else {
-      old20_list <- parallel::mclapply(target_words, FUN=old20, words=all_words, old_n=old_n, mc.cores=cl)
+      old20_list <- parallel::mclapply(target_words, FUN=old, words=all_words,
+                                       old_n=old_n, mc.cores=cl)
     }
   } else {
     if (isTRUE(pb)) {
-      old20_list <- pbapply::pblapply(target_words, FUN=old20, words=all_words, old_n=old_n, cl=NULL)
+      old20_list <- pbapply::pblapply(target_words, FUN=old, words=all_words,
+                                      old_n=old_n, cl=NULL)
     } else {
-      old20_list <- lapply(target_words, FUN=old20, words=all_words, old_n=old_n)
+      old20_list <- lapply(target_words, FUN=old, words=all_words,
+                                      old_n=old_n)
     }
   }
 
