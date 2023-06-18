@@ -9,7 +9,7 @@ old(target_word, words, old_n = 20, show = FALSE)
 \arguments{
 \item{target_word}{target word}
 
-\item{words}{list of words}
+\item{words}{vector of words}
 
 \item{old_n}{number of words to calculate old20, default is 20}
 

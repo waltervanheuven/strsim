@@ -13,9 +13,9 @@ neighborhood_density(
 )
 }
 \arguments{
-\item{targets_spellings}{target strings}
+\item{targets_spellings}{vector of target strings}
 
-\item{all_words}{all words}
+\item{all_words}{vector with words}
 
 \item{show}{show neighbours}
 

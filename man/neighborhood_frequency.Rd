@@ -14,11 +14,11 @@ neighborhood_frequency(
 )
 }
 \arguments{
-\item{targets_spellings}{target strings}
+\item{targets_spellings}{vector of target strings}
 
-\item{all_words}{all words}
+\item{all_words}{vector of words}
 
-\item{all_frequencies}{frequencies of all words}
+\item{all_frequencies}{vector of word frequencies}
 
 \item{show}{show neighbours}
 

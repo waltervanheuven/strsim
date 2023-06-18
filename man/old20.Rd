@@ -7,9 +7,9 @@
 old20(target_words, all_words, old_n = 20, pb = FALSE, parallel = FALSE)
 }
 \arguments{
-\item{target_words}{list of target words}
+\item{target_words}{vector of target words}
 
-\item{all_words}{list of words}
+\item{all_words}{vector of words}
 
 \item{old_n}{max number of most similar words to calculate OLD20}
 

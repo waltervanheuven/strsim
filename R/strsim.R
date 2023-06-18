@@ -61,8 +61,8 @@ nd <- function(target_str, dt, show=FALSE) {
 #'
 #' neighborhood_density()` calculates the neighbourhood density of a list of words.
 #'
-#' @param targets_spellings target strings
-#' @param all_words all words
+#' @param targets_spellings vector of target strings
+#' @param all_words vector with words
 #' @param show show neighbours
 #' @param pb show progress bar
 #' @param parallel parallel processing
@@ -150,9 +150,9 @@ nf <- function(target, dt_corpus, show=FALSE) {
 #' `neighborhood_frequency()` calculates the neighbourhood frequency
 #' of a list of words based on the words and frequencies provided.
 #'
-#' @param targets_spellings target strings
-#' @param all_words all words
-#' @param all_frequencies frequencies of all words
+#' @param targets_spellings vector of target strings
+#' @param all_words vector of words
+#' @param all_frequencies vector of word frequencies
 #' @param show show neighbours
 #' @param pb show progress bar
 #' @param parallel parallel processing
@@ -206,7 +206,7 @@ neighborhood_frequency <- function(targets_spellings, all_words,
 #' \href{http://link.springer.com/article/10.3758/PBR.15.5.971}{Yarkoni et al. (2008)}.
 #'
 #' @param target_word target word
-#' @param words list of words
+#' @param words vector of words
 #' @param old_n number of words to calculate old20, default is 20
 #' @param show show the Levenshtein distance of each of the n_old (20) words that have
 #' the lowest Levenshtein distance with the target word.
@@ -258,8 +258,8 @@ old <- function(target_word, words, old_n = 20, show = FALSE) {
 #' The OLD20 definition was proposed by
 #' \href{http://link.springer.com/article/10.3758/PBR.15.5.971}{Yarkoni et al. (2008)}.
 #'
-#' @param target_words list of target words
-#' @param all_words list of words
+#' @param target_words vector of target words
+#' @param all_words vector of words
 #' @param old_n max number of most similar words to calculate OLD20
 #' @param pb show progress bar
 #' @param parallel parallel processing
